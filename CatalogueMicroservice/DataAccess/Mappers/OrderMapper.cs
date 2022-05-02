@@ -11,7 +11,9 @@ public class OrderMapper
         {
             Product = domainModel.Product,
             PurchasedBy = domainModel.PurchasedBy,
+            Amount = domainModel.Amount,
             DeliverTo = domainModel.DeliverTo,
+            ContactNumber = domainModel.ContactNumber,
             Status = domainModel.Status.ToString()
         };
     }
@@ -20,8 +22,10 @@ public class OrderMapper
     {
         return new Order(
             Product: dataModel.Product, 
-            PurchasedBy: dataModel.PurchasedBy, 
+            PurchasedBy: dataModel.PurchasedBy,
+            Amount: dataModel.Amount,
             DeliverTo: dataModel.DeliverTo,
+            ContactNumber: dataModel.ContactNumber,
             Status: OrderStatus.Parse(dataModel.Status)
         );
     }

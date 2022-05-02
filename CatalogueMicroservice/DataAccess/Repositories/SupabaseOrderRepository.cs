@@ -18,7 +18,7 @@ public class SupabaseOrderRepository : IOrderRepository
     public async Task<Order?> GetOrder(string product)
     {
         ModeledResponse<OrderDataModel> response = await client.From<OrderDataModel>()
-        .Filter("product", Postgrest.Constants.Operator.Equals, product)
+        .Filter("product", Postgrest.Constants.Operator.Equals, int.Parse(product))
         .Get();
 
         if(response.Models.Count == 0)
@@ -39,7 +39,7 @@ public class SupabaseOrderRepository : IOrderRepository
     public async Task<Order> StoreOrder(Order order)
     {
         OrderDataModel dataModel = orderMapper.ToDataModel(order);
-        ModeledResponse<OrderDataModel> response = await client.From<OrderDataModel>().Insert(dataModel);
+        ModeledResponse<OrderDataModel> response = await client.From<OrderDataModel>().Upsert(dataModel);
 
         return orderMapper.ToDomainModel(response.Models[0]);
     }

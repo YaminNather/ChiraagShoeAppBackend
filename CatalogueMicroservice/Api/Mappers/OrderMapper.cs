@@ -20,7 +20,9 @@ public class OrderMapper
         return new OrderDto(
             Product: productDto,
             PurchasedBy: domainModel.PurchasedBy,
+            Amount: domainModel.Amount,
             DeliverTo: domainModel.DeliverTo,
+            ContactNumber: domainModel.ContactNumber,
             Status: domainModel.Status.ToString()
         );
     }
@@ -35,6 +37,7 @@ public class OrderMapper
 
         return r;
     }
+
 
     private readonly IProductRepository productRepository;
     private readonly ProductMapper productMapper;

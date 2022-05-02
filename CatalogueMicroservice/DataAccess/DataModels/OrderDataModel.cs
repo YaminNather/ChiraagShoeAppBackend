@@ -12,8 +12,14 @@ public class OrderDataModel : SupabaseModel
     [PrimaryKey("purchased_by")]
     public string PurchasedBy { get; init; } = null!;
 
+    [Column("amount")]
+    public float Amount { get; init; }
+
     [Column("deliver_to")]
-    public string DeliverTo { get; init; } = null!;
+    public string? DeliverTo { get; init; }
+
+    [Column("contact_number")]
+    public string? ContactNumber { get; init; }
 
     [Column("status")]
     public string Status { get; init; } = null!;

@@ -4,12 +4,14 @@ public struct OrderStatus
 
     public static OrderStatus Parse(String value)
     {
-        if(value == verifying.name)
-            return verifying;
-        else if(value == delivering.name)
-            return delivering;
-        else if(value == delivered.name)
-            return delivered;
+        if(value == Verifying.name)
+            return Verifying;
+        else if(value == Verified.name)
+            return Verified;
+        else if(value == CheckedOut.name)
+            return CheckedOut;
+        else if(value == Delivered.name)
+            return Delivered;
         else
             throw new FormatException();
     }
@@ -19,7 +21,9 @@ public struct OrderStatus
 
     private string name;
 
-    public static OrderStatus verifying = new OrderStatus("verifying");
-    public static OrderStatus delivering = new OrderStatus("delivered");
-    public static OrderStatus delivered = new OrderStatus("delivered");
+
+    public static OrderStatus Verifying = new OrderStatus("verifying");
+    public static OrderStatus Verified = new OrderStatus("verified");
+    public static OrderStatus CheckedOut = new OrderStatus("checked_out");
+    public static OrderStatus Delivered = new OrderStatus("delivered");    
 }

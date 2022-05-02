@@ -33,13 +33,28 @@ public class OrdersController : ControllerBase
 
         bids.Remove(bidToConfirm);
         
-        ConfirmBidResponse confirmBidResponse = orderService.ConfirmBid(bidToConfirm, request.DeliverTo, bids.ToArray<Bid>());
+        ConfirmBidResponse confirmBidResponse = orderService.ConfirmBid(bidToConfirm, bids.ToArray<Bid>());
         
         Order createdOrder = await orderRepository.StoreOrder(confirmBidResponse.Order);
         await bidRepository.UpdateBids(confirmBidResponse.Bids);
                 
         OrderDto dto = await orderMapper.ToDto(createdOrder);
         return Ok(dto);
+    }
+
+    [HttpPost("ConfirmPayment")]
+    public async Task<ActionResult<OrderDto>> ConfirmPayment(ConfirmPaymentRequest request) 
+    {
+        Order? order = await orderRepository.GetOrder(request.Product);
+        if(order == null)
+            return NotFound($"Order for product {request.Product} not found");
+
+        order.MarkAsPaid();
+        
+        await orderRepository.StoreOrder(order);
+
+        OrderDto r = await orderMapper.ToDto(order);
+        return Ok(r);
     }
 
     [HttpGet("GetOrdersPurchasedBy")]
@@ -49,6 +64,33 @@ public class OrdersController : ControllerBase
 
         OrderDto[] orderDtos = await orderMapper.ToDtos(orders);
         return Ok(orderDtos);
+    }
+
+    [HttpGet("GetOrderForProduct")]
+    public async Task<ActionResult<Order>> GetOrderForProduct(string product)
+    {
+        Order? order = await orderRepository.GetOrder(product);
+        if(order == null)
+            return NotFound($"Product {product} not found");
+
+
+        OrderDto r = await orderMapper.ToDto(order);
+        return Ok(r);
+    }
+
+    [HttpPost("CompleteCheckout")]
+    public async Task<ActionResult<Order>> CompleteCheckout(CompleteCheckoutRequest request)
+    {
+        Order? order = await orderRepository.GetOrder(request.Product);
+        if(order == null)
+            return NotFound($"Order for product {request.Product} not found");
+
+        order.CompleteCheckout(request.Address, request.ContactNumber);
+
+        order = await orderRepository.StoreOrder(order);
+
+        OrderDto orderDto = await orderMapper.ToDto(order);
+        return Ok(orderDto);
     }
 
 

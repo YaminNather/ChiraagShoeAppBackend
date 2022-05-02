@@ -4,14 +4,14 @@ namespace ChiraagShoeAppBackend.CatalogueMicroservice.Domain.Services;
 
 public class OrderService
 {
-    public ConfirmBidResponse ConfirmBid(Bid bidToConfirm, string deliverTo, Bid[] productsOtherBids)
+    public ConfirmBidResponse ConfirmBid(Bid bidToConfirm, Bid[] productsOtherBids)
     {
-        bidToConfirm.UpdateStatus(BidStatus.accepted);
+        bidToConfirm.UpdateStatus(BidStatus.Accepted);
 
         foreach(Bid bid in productsOtherBids)
-            bid.UpdateStatus(BidStatus.declined);
+            bid.UpdateStatus(BidStatus.Declined);
         
-        Order createdOrder = new Order(bidToConfirm.ProductId, bidToConfirm.Bidder, deliverTo, OrderStatus.verifying);
+        Order createdOrder = new Order(bidToConfirm.ProductId, bidToConfirm.Bidder, bidToConfirm.Amount, null, null, OrderStatus.Verifying);
         
         List<Bid> updatedBids = new List<Bid>(productsOtherBids);
         updatedBids.Add(bidToConfirm);

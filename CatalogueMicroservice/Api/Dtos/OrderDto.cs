@@ -1,21 +1,28 @@
 namespace ChiraagShoeAppBackend.CatalogueMicroservice.Api.Dtos;
 
+[System.Serializable]
 public class OrderDto
 {
-    public OrderDto(ProductDto Product, string PurchasedBy, string DeliverTo, string Status)
+    public OrderDto(ProductDto Product, string PurchasedBy, string? DeliverTo, string? ContactNumber, float Amount, string Status)
     {
         this.Product = Product;
         this.PurchasedBy = PurchasedBy;
+        this.Amount = Amount;
         this.DeliverTo = DeliverTo;
+        this.ContactNumber = ContactNumber;
         this.Status = Status;
     }
 
 
     public ProductDto Product { get; } = null!;
+
+    public float Amount { get; }
     
     public string PurchasedBy { get; } = null!;
     
-    public string DeliverTo { get; } = null!;
+    public string? DeliverTo { get; }
+
+    public string? ContactNumber { get; }
 
     public string Status { get; }
 }
