@@ -23,11 +23,8 @@ public class ProductRepository : IProductRepository
             Seller = options.Seller,
             Description = options.Description,
             InitialPrice = options.InitialPrice,
-            CreatedAt = options.CreatedAt,
-            ModifiedAt = options.ModifiedAt,
             MainImage = options.MainImage,
-            Images = options.Images,
-            IsAvailable = options.IsAvailable
+            Images = options.Images            
         };
 
         ModeledResponse<ProductDataModel> insertResponse = await client.From<ProductDataModel>().Insert(productDataModel);

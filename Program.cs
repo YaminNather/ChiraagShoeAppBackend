@@ -16,6 +16,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<Supabase.Client>(Supabase.Client.Instance);
 
+builder.Services.AddSingleton<CatalogueMicroservice.Domain.Services.ProductService>();
+builder.Services.AddSingleton<CatalogueMicroservice.Api.Mappers.ProductMapper>();
 builder.Services.AddSingleton<CatalogueMicroservice.DataAccess.Mappers.ProductMapper>();
 builder.Services.AddSingleton<CatalogueMicroservice.Domain.Services.IProductRepository, CatalogueMicroservice.DataAccess.Repositories.ProductRepository>();
 builder.Services.AddSingleton<CatalogueMicroservice.DataAccess.Mappers.BidMapper>();
@@ -33,9 +35,6 @@ builder.Services.AddSingleton<AuthenticationMicroservice.DataAccess.Repositories
 builder.Services.AddSingleton<AuthenticationMicroservice.DataAccess.Mappers.UserMapper>();
 builder.Services.AddSingleton<AuthenticationMicroservice.Domain.Services.SignUpService>();
 builder.Services.AddSingleton<AuthenticationMicroservice.Domain.Services.LoginService>();
-
-builder.Services.AddSingleton<CatalogueMicroservice.Api.Mappers.ProductMapper>();
-builder.Services.AddSingleton<CatalogueMicroservice.Api.Mappers.ProductMapper>();
 
 
 var app = builder.Build();

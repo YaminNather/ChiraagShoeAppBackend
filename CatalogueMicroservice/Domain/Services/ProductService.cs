@@ -1,3 +1,5 @@
+using ChiraagShoeAppBackend.CatalogueMicroservice.Domain.Models;
+
 namespace ChiraagShoeAppBackend.CatalogueMicroservice.Domain.Services;
 
 public class ProductService
@@ -15,8 +17,7 @@ public class ProductService
             Description: productToClone.Description,
             InitialPrice: initialPrice,
             MainImage: productToClone.MainImage,
-            Images: productToClone.Images,
-            IsAvailable: true
+            Images: productToClone.Images
         );
         Product r = await productRepository.Add(addProductOptions);
         return r;

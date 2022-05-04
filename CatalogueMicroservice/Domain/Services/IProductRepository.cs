@@ -25,16 +25,13 @@ public class AddProductOptions
         string Description,
         float InitialPrice,
         string MainImage,
-        List<string>? Images = null,
-        bool IsAvailable
+        List<string>? Images = null
     )
     {
         this.Name = Name;
         this.Seller = Seller;
-        this.Description = Description;        
+        this.Description = Description;
         this.InitialPrice = InitialPrice;
-        this.CreatedAt = CreatedAt;
-        this.ModifiedAt = ModifiedAt;
         this.MainImage = MainImage;
         this.Images = Images;
     }
@@ -49,6 +46,4 @@ public class AddProductOptions
     public string MainImage { get; }
 
     public List<string>? Images { get; }
-
-    public bool IsAvailable { get; }
 }

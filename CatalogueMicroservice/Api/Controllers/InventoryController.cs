@@ -56,13 +56,12 @@ public class InventoryController : ControllerBase
     public async Task<ProductDto?> AddProduct([FromBody]AddProductRequest request)
     {
         AddProductOptions addProductOptions = new AddProductOptions(
-            Name: request.addProduct,
+            Name: request.Name,
             Seller: request.Seller,
             Description: request.Description,
             InitialPrice: request.InitialPrice,
             MainImage: request.MainImage,
-            Images: request.Images,
-            IsAvailable: true
+            Images: request.Images
         );
         Product product = await productRepository.Add(addProductOptions);
 
@@ -70,13 +69,16 @@ public class InventoryController : ControllerBase
     }
 
     [HttpPost("SellBid")]
-    public async Task<IActionResult<ProductDto>> SellBid([FromBody]DuplicateProductRequest request)
+    public async Task<ActionResult<ProductDto>> SellBid([FromBody]DuplicateProductRequest request)
     {
-        Product productToClone = await productRepository.Get(request.Product);
+        Product? productToClone = await productRepository.Get(request.Product);
+        if (productToClone == null)
+            throw new Exception($"Product with id {request.Product} does not exist");
+
         Product product = await productService.DuplicateProduct(productToClone, request.Seller, request.InitialPrice);
 
         ProductDto dto = productMapper.ToDto(product);
-        return dto;
+        return Ok(dto);
     }
 
     [HttpGet("GetAllSellersProducts")]
