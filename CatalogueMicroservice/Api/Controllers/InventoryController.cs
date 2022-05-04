@@ -13,7 +13,8 @@ public class InventoryController : ControllerBase
 {
     public InventoryController(
         IProductRepository productRepository, 
-        ProductMapper productMapper, 
+        ProductMapper productMapper,
+        ProductService productService,
         Supabase.Client client,
         IBidRepository bidRepository,
         BidMapper bidMapper,
@@ -23,6 +24,7 @@ public class InventoryController : ControllerBase
     {
         this.productRepository = productRepository;
         this.productMapper = productMapper;
+        this.productService = productService;
         this.client = client;
         this.bidRepository = bidRepository;
         this.bidMapper = bidMapper;
@@ -32,7 +34,7 @@ public class InventoryController : ControllerBase
 
     [HttpGet("GetProduct")]
     public async Task<ProductDto?> GetProduct(String id)
-    {        
+    {
         Product? product = await productRepository.Get(id);
         
         if(product == null)
@@ -48,37 +50,33 @@ public class InventoryController : ControllerBase
         IEnumerable<Product> products = await productRepository.GetAll();
 
         return products.Select<Product, ProductDto>((element) => productMapper.ToDto(element));
-    }
+    }    
 
     [HttpPost("AddProduct")]
-    public async Task<ProductDto?> AddProduct([FromBody]ProductDto productDto)
+    public async Task<ProductDto?> AddProduct([FromBody]AddProductRequest request)
     {
-        Product product = productMapper.ToDomainModel(productDto, DateTime.Now, DateTime.Now);
-        await productRepository.Store(product);
+        AddProductOptions addProductOptions = new AddProductOptions(
+            Name: request.addProduct,
+            Seller: request.Seller,
+            Description: request.Description,
+            InitialPrice: request.InitialPrice,
+            MainImage: request.MainImage,
+            Images: request.Images,
+            IsAvailable: true
+        );
+        Product product = await productRepository.Add(addProductOptions);
 
         return productMapper.ToDto(product);
     }
 
     [HttpPost("SellBid")]
-    public async Task<ProductDto?> SellBid([FromBody] SellBidRequest request)
+    public async Task<IActionResult<ProductDto>> SellBid([FromBody]DuplicateProductRequest request)
     {
-        Product? product = (await productRepository.Get(request.ProductId))!;
+        Product productToClone = await productRepository.Get(request.Product);
+        Product product = await productService.DuplicateProduct(productToClone, request.Seller, request.InitialPrice);
 
-        AddProductOptions addProductOptions = new AddProductOptions(
-            Name: product.Name,
-            Seller: request.Seller,
-            Description: product.Description,
-            Category: product.Category,
-            InitialPrice: request.Amount,
-            CreatedAt: product.CreatedAt,
-            ModifiedAt: product.ModifiedAt,
-            MainImage: product.MainImage,
-            IsAvailable: product.IsAvailable,
-            Images: product.Images
-        );
-        Product newProduct = await productRepository.Add(addProductOptions);
-
-        return productMapper.ToDto(newProduct);
+        ProductDto dto = productMapper.ToDto(product);
+        return dto;
     }
 
     [HttpGet("GetAllSellersProducts")]
@@ -122,6 +120,7 @@ public class InventoryController : ControllerBase
 
 
     private readonly IProductRepository productRepository;
+    private readonly ProductService productService;
     private readonly ProductMapper productMapper;
     private readonly IBidRepository bidRepository;
     private readonly BidMapper bidMapper;

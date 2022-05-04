@@ -23,19 +23,15 @@ public class AddProductOptions
         string Name,
         string Seller,
         string Description,
-        Category? Category,
         float InitialPrice,
-        DateTime CreatedAt,
-        DateTime ModifiedAt,
         string MainImage,
-        bool IsAvailable,
-        List<string>? Images = null
+        List<string>? Images = null,
+        bool IsAvailable
     )
     {
         this.Name = Name;
         this.Seller = Seller;
-        this.Description = Description;
-        this.Category = Category;
+        this.Description = Description;        
         this.InitialPrice = InitialPrice;
         this.CreatedAt = CreatedAt;
         this.ModifiedAt = ModifiedAt;
@@ -47,14 +43,8 @@ public class AddProductOptions
     public string Seller { get; }
     
     public string Description { get; }
-
-    public Category? Category { get; }
     
     public float InitialPrice { get; }
-
-    public DateTime CreatedAt { get; }
-    
-    public DateTime ModifiedAt { get; }
 
     public string MainImage { get; }
 

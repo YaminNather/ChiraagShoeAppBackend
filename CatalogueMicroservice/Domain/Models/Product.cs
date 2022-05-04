@@ -29,6 +29,20 @@ namespace ChiraagShoeAppBackend.CatalogueMicroservice.Domain.Models
             this.IsAvailable = IsAvailable;
         }
 
+        public bool Duplicate()
+        {
+            AddProductOptions addProductOptions = new AddProductOptions(
+                Name: productToClone.Name,
+                Seller: request.Seller,
+                Description: productToClone.Description,
+                InitialPrice: request.InitialPrice,
+                MainImage: productToClone.MainImage,
+                Images: productToClone.Images
+            );
+
+            Add
+        }
+
         public bool IsSame(Product other) => Id == other.Id;
 
         public string Id { get; }
