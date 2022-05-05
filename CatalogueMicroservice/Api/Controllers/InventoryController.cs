@@ -94,7 +94,10 @@ public class InventoryController : ControllerBase
             {
                 Bid? highestBid = await bidRepository.GetHighestBidOfProduct(product.Id);
                 if(highestBid != null)
-                    soldItemDto = new SoldItemDto(productMapper.ToDto(product), Bid: bidMapper.ToDto(highestBid));                    
+                {
+                    BidDto bidDto = await bidMapper.ToDto(highestBid);
+                    soldItemDto = new SoldItemDto(productMapper.ToDto(product), Bid: bidDto);
+                }
                 else
                     soldItemDto = new SoldItemDto(productMapper.ToDto(product));
             }

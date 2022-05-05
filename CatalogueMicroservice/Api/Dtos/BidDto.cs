@@ -4,7 +4,7 @@ namespace ChiraagShoeAppBackend.CatalogueMicroservice.Api.Dtos;
 
 public struct BidDto
 {
-    public BidDto(string Bidder, string ProductId, float Amount, string Status)
+    public BidDto(UserDto Bidder, string ProductId, float Amount, string Status)
     {
         this.Bidder = Bidder;
         this.ProductId = ProductId;
@@ -12,7 +12,7 @@ public struct BidDto
         this.Status = Status;
     }
     
-    public string Bidder { get; } = null!;
+    public UserDto Bidder { get; }
 
     public string ProductId { get; } = null!;
 

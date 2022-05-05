@@ -49,26 +49,17 @@ public class BidServicesController : ControllerBase
     {
         Bid[] productBids = await bidRepository.GetBidsOfProduct(productId);
         
-        BidDto[] dtos = productBids.Select<Bid, BidDto>((bid) => bidMapper.ToDto(bid)).ToArray<BidDto>();
+        BidDto[] dtos = await bidMapper.ToDtos(productBids);
         return Ok(dtos);
     }
 
     [HttpGet("GetBidsOfUser")]
-    public async Task<ActionResult<BidWithProductDto>> GetBidsOfUser(string userId)
+    public async Task<ActionResult<BidWithProductDto[]>> GetBidsOfUser(string userId)
     {
         Bid[] bids = await bidRepository.GetBidsOfUser(userId);
-        List<BidWithProductDto> r = new List<BidWithProductDto>();
-        foreach(Bid bid in bids)
-        {
-            Product? product = await productRepository.Get(bid.ProductId);
-            if(product == null)
-                throw new Exception();
-            
-            BidWithProductDto dto = new BidWithProductDto(bid.Bidder, productMapper.ToDto(product), bid.Amount, bid.Status.ToString());
-            r.Add(dto);
-        }
+        BidWithProductDto[] dtos = await bidMapper.ToWithProductDtos(bids);
 
-        return Ok(r);
+        return Ok(dtos);
     }
 
 

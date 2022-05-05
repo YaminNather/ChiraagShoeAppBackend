@@ -1,3 +1,4 @@
+using ChiraagShoeAppBackend.AuthenticationMicroservice.DataAccess.DataModels;
 using ChiraagShoeAppBackend.AuthenticationMicroservice.DataAccess.Mappers;
 using ChiraagShoeAppBackend.AuthenticationMicroservice.Domain.Models;
 using Postgrest.Responses;
@@ -64,5 +65,5 @@ public class UserRepository
 
 
     private readonly Client client;
-    private readonly UserMapper mapper = new UserMapper(); 
+    private readonly UserMapper mapper = new UserMapper();
 }
