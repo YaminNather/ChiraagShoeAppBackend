@@ -19,24 +19,27 @@ public class SignUpService
 
         bool usernameExists = await checkIfUsernameExists(username);
         if(usernameExists)
-            throw new UsernameAlreadyExistsException();            
+            throw new UsernameAlreadyExistsException();
 
-        Supabase.Gotrue.Session session;
-        try {
-            session = await client.Auth.SignUp(email, password);
-        }
-        catch {
-            throw new SignUpException();
-        }        
+        bool emailExists = await checkIfEmailExists(email);
+        if(emailExists)
+            throw new EmailAlreadyExistsException();
 
-        User user = new User(session.User.Id, username, session.User.Email, password);
+        User r = await userRepository.Create(username, email, password);
 
-        return user;
+        return r;
     }
 
     private async Task<bool> checkIfUsernameExists(string username)
     {
         User? user = await userRepository.GetWithUsername(username);
+
+        return user != null;
+    }
+
+    private async Task<bool> checkIfEmailExists(string email)
+    {
+        User? user = await userRepository.GetWithEmail(email);
 
         return user != null;
     }
@@ -49,4 +52,5 @@ public class SignUpService
 public class SignUpException : System.Exception {}
 
 public class UsernameAlreadyExistsException : System.Exception {}
+public class EmailAlreadyExistsException : System.Exception {}
 public class InvalidPasswordFormatException : System.Exception {}

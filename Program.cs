@@ -1,9 +1,17 @@
 using CatalogueMicroservice = ChiraagShoeAppBackend.CatalogueMicroservice;
 using AuthenticationMicroservice = ChiraagShoeAppBackend.AuthenticationMicroservice;
+using Supabase;
 
 string url = "https://nzjzbovrzkimbccsxptb.supabase.co";
-string apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56anpib3ZyemtpbWJjY3N4cHRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDQ4MjMxMjYsImV4cCI6MTk2MDM5OTEyNn0.lK9nCdpWSlIsRy1TAtnUS4ttfBLhd3l1AN2Y0XPGIm4";
-Supabase.Client.Initialize(url, apiKey);
+string apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56anpib3ZyemtpbWJjY3N4cHRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NTE2NzI2OTcsImV4cCI6MTk2NzI0ODY5N30.99oke2t10CO3VteLjLZwwE-zphKEBGTPOhNi3G4oBys";
+// string apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56anpib3ZyemtpbWJjY3N4cHRiIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY0NDgyMzEyNiwiZXhwIjoxOTYwMzk5MTI2fQ.JwlSQBQGEV5EdV8dF5QY4fiEnPidSRKLMEg-JxB_75k";
+await Supabase.Client.InitializeAsync(url, apiKey);
+// try {
+//     await Supabase.Client.Instance.Auth.SignUp("yamin.nather@science.christuniversity.in", "qwerty123");
+// }
+// catch (Exception e) {
+//     await Supabase.Client.Instance.Auth.SignIn("yamin.nather@science.christuniversity.in", "qwerty123");
+// }
 
 var builder = WebApplication.CreateBuilder(args);
 

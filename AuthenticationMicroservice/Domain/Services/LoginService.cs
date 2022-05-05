@@ -27,21 +27,13 @@ public class LoginService
 
     public async Task<User> LoginWithEmail(string email, string password)
     {
-        Supabase.Gotrue.Session response;
-        try 
-        {
-            response = await client.Auth.SignIn(email, password);
-        }
-        catch(Exception e)
-        {
-            Console.WriteLine(e.StackTrace);
-            throw new LoginException();
-        }
+        User? user = await userRepository.GetWithEmail(email);
 
-        User? user = await userRepository.Get(response.User.Id);
-        
         if(user == null)
-            throw new Exception();
+            throw new UserWithEmailDoesntExistException();
+
+        if(password != user.Password)
+            throw new LoginException();
 
         return user;
     }
@@ -55,3 +47,4 @@ public class LoginService
 public class LoginException : System.Exception {}
 
 public class UserWithUsernameDoesntExistException : System.Exception {}
+public class UserWithEmailDoesntExistException : System.Exception {}
