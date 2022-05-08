@@ -44,7 +44,13 @@ public class SupabaseBidRepository : IBidRepository
 
     public async Task<Bid> AddBid(AddBidOptions options)
     {
-        BidDataModel dataModel = new BidDataModel { Bidder = options.Bidder, ProductId = options.ProductId, Amount = options.Amount };
+        BidDataModel dataModel = new BidDataModel 
+        { 
+            Bidder = options.Bidder, 
+            ProductId = options.ProductId, 
+            Amount = options.Amount,
+            Status = BidStatus.Pending.ToString()
+        };
         
         ModeledResponse<BidDataModel> insertResponse = await client.From<BidDataModel>().Insert(dataModel);
 

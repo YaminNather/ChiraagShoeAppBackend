@@ -6,20 +6,24 @@ namespace ChiraagShoeAppBackend.CatalogueMicroservice.Api.Mappers;
 
 public class OrderMapper
 {
-    public OrderMapper(ProductMapper productMapper, IProductRepository productRepository)
+    public OrderMapper(ProductMapper productMapper, IProductRepository productRepository, IUserRepository userRepository, UserMapper userMapper)
     {
         this.productMapper = productMapper;
         this.productRepository = productRepository;
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
 
     public async Task<OrderDto> ToDto(Order domainModel)
     {
         Product product = (await productRepository.Get(domainModel.Product))!;
-        ProductDto productDto = productMapper.ToDto(product);
+        ProductDto productDto = await productMapper.ToDto(product);
+
+        User purchasedBy = (await userRepository.Get(domainModel.PurchasedBy))!;
 
         return new OrderDto(
             Product: productDto,
-            PurchasedBy: domainModel.PurchasedBy,
+            PurchasedBy: userMapper.ToDto(purchasedBy),
             Amount: domainModel.Amount,
             DeliverTo: domainModel.DeliverTo,
             ContactNumber: domainModel.ContactNumber,
@@ -39,6 +43,8 @@ public class OrderMapper
     }
 
 
-    private readonly IProductRepository productRepository;
+    private readonly IProductRepository productRepository;    
     private readonly ProductMapper productMapper;
+    private readonly IUserRepository userRepository;
+    private readonly UserMapper userMapper;
 }

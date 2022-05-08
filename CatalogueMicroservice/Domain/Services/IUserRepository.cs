@@ -2,4 +2,7 @@ using ChiraagShoeAppBackend.CatalogueMicroservice.Domain.Models;
 
 namespace ChiraagShoeAppBackend.CatalogueMicroservice.Domain.Services;
 
-public class OrderService {}
+public interface IUserRepository
+{
+    public Task<User?> Get(string id);
+}

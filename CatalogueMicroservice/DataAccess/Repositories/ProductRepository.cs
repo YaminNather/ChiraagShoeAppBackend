@@ -72,10 +72,14 @@ public class ProductRepository : IProductRepository
         return r;
     }
 
-    public async Task Store(Product product)
+    public async Task<Product> Store(Product product)
     {
-        await client.From<ProductDataModel>().Insert(mapper.FromDomainModel(product));
+        ModeledResponse<ProductDataModel> response = await client.From<ProductDataModel>().Insert(mapper.FromDomainModel(product));
+
+        Product r = mapper.ToDomainModel(response.Models[0]);
+        return r;
     }
+
 
 
     private readonly Client client;

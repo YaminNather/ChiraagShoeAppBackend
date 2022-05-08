@@ -12,7 +12,7 @@ namespace ChiraagShoeAppBackend.CatalogueMicroservice.Api.Controllers;
 public class InventoryController : ControllerBase
 {
     public InventoryController(
-        IProductRepository productRepository, 
+        IProductRepository productRepository,
         ProductMapper productMapper,
         ProductService productService,
         Supabase.Client client,
@@ -40,7 +40,7 @@ public class InventoryController : ControllerBase
         if(product == null)
             return null;
 
-        ProductDto r = productMapper.ToDto(product);
+        ProductDto r = await productMapper.ToDto(product);
         return r;
     }
 
@@ -49,7 +49,7 @@ public class InventoryController : ControllerBase
     {
         IEnumerable<Product> products = await productRepository.GetAll();
 
-        return products.Select<Product, ProductDto>((element) => productMapper.ToDto(element));
+        return await productMapper.ToDtos(products.ToArray());
     }    
 
     [HttpPost("AddProduct")]
@@ -65,7 +65,7 @@ public class InventoryController : ControllerBase
         );
         Product product = await productRepository.Add(addProductOptions);
 
-        return productMapper.ToDto(product);
+        return await productMapper.ToDto(product);
     }
 
     [HttpPost("SellBid")]
@@ -77,7 +77,7 @@ public class InventoryController : ControllerBase
 
         Product product = await productService.DuplicateProduct(productToClone, request.Seller, request.InitialPrice);
 
-        ProductDto dto = productMapper.ToDto(product);
+        ProductDto dto = await productMapper.ToDto(product);
         return Ok(dto);
     }
 
@@ -94,14 +94,17 @@ public class InventoryController : ControllerBase
             {
                 Bid? highestBid = await bidRepository.GetHighestBidOfProduct(product.Id);
                 if(highestBid != null)
-                    soldItemDto = new SoldItemDto(productMapper.ToDto(product), Bid: bidMapper.ToDto(highestBid));                    
+                {
+                    BidDto bidDto = await bidMapper.ToDto(highestBid);
+                    soldItemDto = new SoldItemDto(await productMapper.ToDto(product), Bid: bidDto);
+                }
                 else
-                    soldItemDto = new SoldItemDto(productMapper.ToDto(product));
+                    soldItemDto = new SoldItemDto(await productMapper.ToDto(product));
             }
             else
             {
                 Order order = (await orderRepository.GetOrder(product.Id))!;
-                soldItemDto = new SoldItemDto(productMapper.ToDto(product), Order: await orderMapper.ToDto(order));
+                soldItemDto = new SoldItemDto(await productMapper.ToDto(product), Order: await orderMapper.ToDto(order));
             }
 
             if(soldItemDto != null)
@@ -116,7 +119,7 @@ public class InventoryController : ControllerBase
     {
         Product[] products = await productRepository.GetLatestArrivals();
 
-        ProductDto[] dtos = products.Select<Product, ProductDto>((product) => productMapper.ToDto(product)).ToArray();
+        ProductDto[] dtos = await productMapper.ToDtos(products);
         return Ok(dtos);
     }
 

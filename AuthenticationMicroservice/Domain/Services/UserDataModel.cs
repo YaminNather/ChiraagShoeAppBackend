@@ -1,6 +1,8 @@
 using Postgrest.Attributes;
 using Supabase;
 
+namespace ChiraagShoeAppBackend.AuthenticationMicroservice.DataAccess.DataModels;
+
 [Table("users")]
 public class UserDataModel : SupabaseModel
 {

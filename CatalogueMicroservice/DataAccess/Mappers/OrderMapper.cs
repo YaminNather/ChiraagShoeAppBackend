@@ -21,12 +21,12 @@ public class OrderMapper
     public Order ToDomainModel(OrderDataModel dataModel)
     {
         return new Order(
-            Product: dataModel.Product, 
-            PurchasedBy: dataModel.PurchasedBy,
-            Amount: dataModel.Amount,
+            Product: dataModel.Product!,
+            PurchasedBy: dataModel.PurchasedBy!,
+            Amount: (float)dataModel.Amount!,
             DeliverTo: dataModel.DeliverTo,
             ContactNumber: dataModel.ContactNumber,
-            Status: OrderStatus.Parse(dataModel.Status)
+            Status: OrderStatus.Parse((string)dataModel.Status!)
         );
     }
 }

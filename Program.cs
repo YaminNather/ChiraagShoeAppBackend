@@ -13,7 +13,7 @@ await Supabase.Client.InitializeAsync(url, apiKey);
 //     await Supabase.Client.Instance.Auth.SignIn("yamin.nather@science.christuniversity.in", "qwerty123");
 // }
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
@@ -24,25 +24,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<Supabase.Client>(Supabase.Client.Instance);
 
-builder.Services.AddSingleton<CatalogueMicroservice.Domain.Services.ProductService>();
-builder.Services.AddSingleton<CatalogueMicroservice.Api.Mappers.ProductMapper>();
-builder.Services.AddSingleton<CatalogueMicroservice.DataAccess.Mappers.ProductMapper>();
-builder.Services.AddSingleton<CatalogueMicroservice.Domain.Services.IProductRepository, CatalogueMicroservice.DataAccess.Repositories.ProductRepository>();
-builder.Services.AddSingleton<CatalogueMicroservice.DataAccess.Mappers.BidMapper>();
+new CatalogueMicroservice.DependencyInjectionRegistrar().AddDependencies(builder);
 
-builder.Services.AddSingleton<CatalogueMicroservice.Domain.Services.IBidRepository, CatalogueMicroservice.DataAccess.Repositories.SupabaseBidRepository>();
-builder.Services.AddSingleton<CatalogueMicroservice.Domain.Services.BidService>();
-builder.Services.AddSingleton<CatalogueMicroservice.Api.Mappers.BidMapper>();
-
-builder.Services.AddSingleton<CatalogueMicroservice.Api.Mappers.OrderMapper>();
-builder.Services.AddSingleton<CatalogueMicroservice.DataAccess.Mappers.OrderMapper>();
-builder.Services.AddSingleton<CatalogueMicroservice.Domain.Services.IOrderRepository, CatalogueMicroservice.DataAccess.Repositories.SupabaseOrderRepository>();
-builder.Services.AddSingleton<CatalogueMicroservice.Domain.Services.OrderService>();
-
-builder.Services.AddSingleton<AuthenticationMicroservice.DataAccess.Repositories.UserRepository>();
-builder.Services.AddSingleton<AuthenticationMicroservice.DataAccess.Mappers.UserMapper>();
-builder.Services.AddSingleton<AuthenticationMicroservice.Domain.Services.SignUpService>();
-builder.Services.AddSingleton<AuthenticationMicroservice.Domain.Services.LoginService>();
+new AuthenticationMicroservice.DependencyInjectionRegistrar().AddDependencies(builder);
 
 
 var app = builder.Build();
