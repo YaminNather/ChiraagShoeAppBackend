@@ -15,6 +15,21 @@ public class SupabaseOrderRepository : IOrderRepository
         this.client = client;
     }
 
+    public async Task<Order> CreateOrder(string product, string purchasedBy, float amount)
+    {
+        OrderDataModel orderDataModel = new OrderDataModel
+        {
+            Product = product,
+            PurchasedBy = purchasedBy,
+            Amount = amount
+        };
+
+        ModeledResponse<OrderDataModel> response = await client.From<OrderDataModel>().Insert(orderDataModel);                    
+
+        Order r = orderMapper.ToDomainModel(response.Models[0]);
+        return r;
+    }
+
     public async Task<Order?> GetOrder(string product)
     {
         ModeledResponse<OrderDataModel> response = await client.From<OrderDataModel>()

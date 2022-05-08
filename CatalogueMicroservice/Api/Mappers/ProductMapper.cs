@@ -1,17 +1,26 @@
 using ChiraagShoeAppBackend.CatalogueMicroservice.Domain.Models;
 using ChiraagShoeAppBackend.CatalogueMicroservice.Api.Dtos;
+using ChiraagShoeAppBackend.CatalogueMicroservice.Domain.Services;
 
 namespace ChiraagShoeAppBackend.CatalogueMicroservice.Api.Mappers;
 
 public class ProductMapper
 {
-    public ProductDto ToDto(Product domainModel)
+    public ProductMapper(IUserRepository userRepository, UserMapper userMapper)
     {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+    }
+
+    public async Task<ProductDto> ToDto(Product domainModel)
+    {
+        User seller = (await userRepository.Get(domainModel.Seller))!;
+
         return new ProductDto 
         { 
             Id = domainModel.Id,
             Name = domainModel.Name,
-            Seller = domainModel.Seller,
+            Seller = userMapper.ToDto(seller),
             Description = domainModel.Description,
             InitialPrice = domainModel.InitialPrice,
             Category = domainModel.Category?.name,
@@ -23,12 +32,21 @@ public class ProductMapper
         };
     }
 
-    public Product ToDomainModel(ProductDto dto, DateTime createdAt, DateTime modifiedAt)
+    public async Task<ProductDto[]> ToDtos(Product[] domainModels)
     {
+        ProductDto[] r = new ProductDto[domainModels.Length];
+        for(int i = 0; i < domainModels.Length; i++)
+            r[i] = await ToDto(domainModels[i]);
+
+        return r;
+    }
+
+    public Product ToDomainModel(ProductDto dto, DateTime createdAt, DateTime modifiedAt)
+    {        
         return new Product(
             Id: dto.Id,
             Name: dto.Name,
-            Seller: dto.Seller, 
+            Seller: dto.Seller.Id, 
             Description: dto.Description, 
             Category: Category.FromID(dto.Category),
             InitialPrice: dto.InitialPrice, 
@@ -39,4 +57,7 @@ public class ProductMapper
             IsAvailable: dto.IsAvailable
         );
     }
+
+    private readonly IUserRepository userRepository;
+    private readonly  UserMapper userMapper;
 }

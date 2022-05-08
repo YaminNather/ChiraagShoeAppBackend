@@ -15,7 +15,9 @@ public class BidServicesController : ControllerBase
         IBidRepository bidRepository, 
         BidMapper bidMapper, 
         IProductRepository productRepository, 
-        ProductMapper productMapper
+        ProductMapper productMapper,
+        IOrderRepository orderRepository,
+        OrderMapper orderMapper
     )
     {
         this.bidService = bidService;
@@ -23,6 +25,8 @@ public class BidServicesController : ControllerBase
         this.bidMapper = bidMapper;
         this.productRepository = productRepository;
         this.productMapper = productMapper;
+        this.orderRepository = orderRepository;
+        this.orderMapper = orderMapper;
     }
 
     [HttpPost("PlaceBid")]
@@ -30,11 +34,12 @@ public class BidServicesController : ControllerBase
     {
         Bid[] productBids = await bidRepository.GetBidsOfProduct(placeBidRequest.ProductId);
 
-        Bid placedBid = await bidService.PlaceBid(placeBidRequest.Bidder, placeBidRequest.ProductId, placeBidRequest.Amount, productBids);
+        Product product = (await productRepository.Get(placeBidRequest.ProductId))!;
+        Bid placedBid = await bidService.PlaceBid(placeBidRequest.Bidder, product, placeBidRequest.Amount, productBids);
         
-        return Ok(bidMapper.ToDto(placedBid));
+        BidDto bidDto = await bidMapper.ToDto(placedBid);
+        return Ok(bidDto);
     }
-
 
     [HttpPost("RemoveBid")]
     public async Task<ActionResult> RemoveBid([FromBody] RemoveBidRequest removeBidRequest)
@@ -42,6 +47,25 @@ public class BidServicesController : ControllerBase
         await bidRepository.RemoveBid(removeBidRequest.ProductId);
 
         return new OkResult();
+    }
+
+    [HttpPost("AcceptBid")]
+    public async Task<ActionResult<OrderDto>> AcceptBid([FromBody] AcceptBidRequest request)
+    {
+        List<Bid> bids = new List<Bid>(await bidRepository.GetBidsOfProduct(request.Product));
+        Bid? bidToConfirm = bids.Find((bid) => bid.ProductId == request.Product && bid.Bidder == request.Bidder);        
+        if(bidToConfirm == null)
+            return BadRequest("Bid does not exist");
+
+        bids.Remove(bidToConfirm);
+        
+        ConfirmBidResponse confirmBidResponse = bidService.AcceptBid(bidToConfirm, bids.ToArray<Bid>());
+    
+        Order createdOrder = await orderRepository.StoreOrder(confirmBidResponse.Order);
+        await bidRepository.UpdateBids(confirmBidResponse.Bids);
+                
+        OrderDto dto = await orderMapper.ToDto(createdOrder);
+        return Ok(dto);
     }
 
     [HttpGet("GetBidsForProduct")]
@@ -67,5 +91,7 @@ public class BidServicesController : ControllerBase
     private readonly IBidRepository bidRepository;
     private readonly BidMapper bidMapper;
     private readonly IProductRepository productRepository;
-    private readonly ProductMapper productMapper;    
+    private readonly ProductMapper productMapper;
+    private readonly IOrderRepository orderRepository;
+    private readonly OrderMapper orderMapper;
 }

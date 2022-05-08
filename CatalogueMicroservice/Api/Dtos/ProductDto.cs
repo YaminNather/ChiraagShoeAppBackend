@@ -8,7 +8,7 @@ public class ProductDto
 
     public string Name { get; init; } = null!;
 
-    public string Seller { get; init; } = null!;
+    public UserDto Seller { get; init; } = null!;
     
     public string Description { get; init; } = null!;
 

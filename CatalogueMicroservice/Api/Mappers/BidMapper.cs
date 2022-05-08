@@ -52,7 +52,7 @@ public class BidMapper
 
         return new BidWithProductDto(
             Bidder: userMapper.ToDto(bidder),
-            Product: productMapper.ToDto(product),
+            Product: await productMapper.ToDto(product),
             Amount: domainModel.Amount,
             Status: domainModel.Status.ToString()
         );

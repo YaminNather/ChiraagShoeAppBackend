@@ -29,6 +29,8 @@ namespace ChiraagShoeAppBackend.CatalogueMicroservice.Domain.Models
             this.IsAvailable = IsAvailable;
         }
 
+        public void MakeUnavailable() => this.IsAvailable = false;
+
         public bool IsSame(Product other) => Id == other.Id;
 
         public string Id { get; }
@@ -51,6 +53,6 @@ namespace ChiraagShoeAppBackend.CatalogueMicroservice.Domain.Models
 
         public List<string>? Images { get; }
 
-        public bool IsAvailable { get; }
+        public bool IsAvailable { get; private set; }
     }
 }

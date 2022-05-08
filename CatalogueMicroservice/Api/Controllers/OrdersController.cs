@@ -21,26 +21,7 @@ public class OrdersController : ControllerBase
         this.bidRepository = bidRepository;
         this.orderRepository = orderRepository;
         this.orderMapper = orderMapper;
-    }
-
-    [HttpPost("ConfirmBid")]
-    public async Task<ActionResult<OrderDto>> ConfirmBid([FromBody] ConfirmBidRequest request)
-    {
-        List<Bid> bids = new List<Bid>(await bidRepository.GetBidsOfProduct(request.Product));
-        Bid? bidToConfirm = bids.Find((bid) => bid.ProductId == request.Product && bid.Bidder == request.Bidder);        
-        if(bidToConfirm == null)
-            return BadRequest("Bid does not exist");
-
-        bids.Remove(bidToConfirm);
-        
-        ConfirmBidResponse confirmBidResponse = orderService.ConfirmBid(bidToConfirm, bids.ToArray<Bid>());
-        
-        Order createdOrder = await orderRepository.StoreOrder(confirmBidResponse.Order);
-        await bidRepository.UpdateBids(confirmBidResponse.Bids);
-                
-        OrderDto dto = await orderMapper.ToDto(createdOrder);
-        return Ok(dto);
-    }
+    }    
 
     [HttpPost("ConfirmPayment")]
     public async Task<ActionResult<OrderDto>> ConfirmPayment(ConfirmPaymentRequest request) 

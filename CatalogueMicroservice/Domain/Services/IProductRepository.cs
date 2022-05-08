@@ -14,7 +14,7 @@ public interface IProductRepository
 
     Task<Product[]> GetLatestArrivals();
 
-    Task Store(Product product);
+    Task<Product> Store(Product product);
 }
 
 public class AddProductOptions

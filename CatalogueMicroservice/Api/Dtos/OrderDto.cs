@@ -1,9 +1,11 @@
+using ChiraagShoeAppBackend.CatalogueMicroservice.Domain.Models;
+
 namespace ChiraagShoeAppBackend.CatalogueMicroservice.Api.Dtos;
 
 [System.Serializable]
 public class OrderDto
 {
-    public OrderDto(ProductDto Product, string PurchasedBy, string? DeliverTo, string? ContactNumber, float Amount, string Status)
+    public OrderDto(ProductDto Product, UserDto PurchasedBy, string? DeliverTo, string? ContactNumber, float Amount, string Status)
     {
         this.Product = Product;
         this.PurchasedBy = PurchasedBy;
@@ -18,7 +20,7 @@ public class OrderDto
 
     public float Amount { get; }
     
-    public string PurchasedBy { get; } = null!;
+    public UserDto PurchasedBy { get; }
     
     public string? DeliverTo { get; }
 

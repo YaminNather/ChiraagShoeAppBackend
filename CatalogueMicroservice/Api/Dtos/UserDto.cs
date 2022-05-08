@@ -6,10 +6,10 @@ public class UserDto
     public UserDto(String Id, String Username)
     {
         this.Id = Id;
-        this.UserName = Username; 
+        this.Username = Username; 
     }
 
     public string Id { get; init; } = null!;
 
-    public string UserName { get; init; } = null!;
+    public string Username { get; init; } = null!;
 }
