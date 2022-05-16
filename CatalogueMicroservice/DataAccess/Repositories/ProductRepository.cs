@@ -44,9 +44,14 @@ public class ProductRepository : IProductRepository
         return mapper.ToDomainModel(results.Models[0]);
     }
 
-    public async Task<IEnumerable<Product>> GetAll()
+    public async Task<IEnumerable<Product>> GetAll(SortOrder? addedDateSortOrder = null)
     {
-        ModeledResponse<ProductDataModel> response = await client.From<ProductDataModel>().Get();
+        SupabaseTable<ProductDataModel> productTable = client.From<ProductDataModel>();
+        ModeledResponse<ProductDataModel> response;
+        if(addedDateSortOrder == null)
+            response = await productTable.Get();
+        else
+            response = await productTable.Order("created_at", SupabaseMapper.SortOrderToSupabaseFormat((SortOrder)addedDateSortOrder)).Get();
         List<ProductDataModel> dataModels = response.Models;
 
         return dataModels.Select<ProductDataModel, Product>((element) => mapper.ToDomainModel(element));

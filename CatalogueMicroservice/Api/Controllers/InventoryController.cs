@@ -45,9 +45,9 @@ public class InventoryController : ControllerBase
     }
 
     [HttpGet("GetAllProducts")]
-    public async Task<IEnumerable<ProductDto>> GetAllProducts()
+    public async Task<IEnumerable<ProductDto>> GetAllProducts([FromQuery] SortOrder? addedDateSortOrder = null)
     {
-        IEnumerable<Product> products = await productRepository.GetAll();
+        IEnumerable<Product> products = await productRepository.GetAll(addedDateSortOrder: addedDateSortOrder);
 
         return await productMapper.ToDtos(products.ToArray());
     }    

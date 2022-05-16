@@ -8,7 +8,7 @@ public interface IProductRepository
 
     Task<Product?> Get(String id);
 
-    Task<IEnumerable<Product>> GetAll();
+    Task<IEnumerable<Product>> GetAll(SortOrder? addedDateSortOrder = null);
 
     Task<Product[]> GetAllSellersProducts(string seller);
 
