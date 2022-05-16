@@ -41,13 +41,13 @@ public class BidServicesController : ControllerBase
         return Ok(bidDto);
     }
 
-    [HttpPost("RemoveBid")]
-    public async Task<ActionResult> RemoveBid([FromBody] RemoveBidRequest removeBidRequest)
-    {
-        await bidRepository.RemoveBid(removeBidRequest.ProductId);
+    // [HttpPost("RemoveBid")]
+    // public async Task<ActionResult> RemoveBid([FromBody] RemoveBidRequest removeBidRequest)
+    // {
+    //     await bidRepository.RemoveBid(removeBidRequest.ProductId);
 
-        return new OkResult();
-    }
+    //     return new OkResult();
+    // }
 
     [HttpPost("AcceptBid")]
     public async Task<ActionResult<OrderDto>> AcceptBid([FromBody] AcceptBidRequest request)

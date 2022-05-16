@@ -11,7 +11,7 @@ public interface IBidRepository
     Task<Bid> AddBid(AddBidOptions options);
     Task<Bid> UpdateBid(Bid bid);
     Task UpdateBids(Bid[] bids);
-    Task RemoveBid(string bidId);
+    Task RemoveBid(string bidder, string product);
 }
 
 public struct AddBidOptions

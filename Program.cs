@@ -7,7 +7,7 @@ string apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
 // string apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56anpib3ZyemtpbWJjY3N4cHRiIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY0NDgyMzEyNiwiZXhwIjoxOTYwMzk5MTI2fQ.JwlSQBQGEV5EdV8dF5QY4fiEnPidSRKLMEg-JxB_75k";
 await Supabase.Client.InitializeAsync(url, apiKey);
 
-await DatabaseCreater.CreateDatabase();
+// await DatabaseCreater.CreateDatabase();
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 

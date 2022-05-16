@@ -60,7 +60,9 @@ public class SupabaseBidRepository : IBidRepository
     public async Task<Bid> UpdateBid(Bid bid)
     {
         BidDataModel dataModel = bidMapper.ToDataModel(bid);
-        ModeledResponse<BidDataModel> insertResponse = await client.From<BidDataModel>().Update(dataModel);
+        
+        await RemoveBid(bid.Bidder, bid.ProductId);
+        ModeledResponse<BidDataModel> insertResponse = await client.From<BidDataModel>().Insert(dataModel);
 
         return bidMapper.ToDomainModel(insertResponse.Models[0]);
     }
@@ -71,10 +73,13 @@ public class SupabaseBidRepository : IBidRepository
             await UpdateBid(bid);
     }
 
-    public async Task RemoveBid(string bidId)
+    public async Task RemoveBid(string bidder, string product)
     {
-        await client.From<BidDataModel>().Filter("id", Postgrest.Constants.Operator.Equals, bidId).Delete();
-    }   
+        await client.From<BidDataModel>()
+        .Filter("bidder", Postgrest.Constants.Operator.Equals, bidder)
+        .Filter("product_id", Postgrest.Constants.Operator.Equals, product)
+        .Delete();
+    }
 
     public async Task<Bid[]> GetBidsOfUser(string userId)
     {
