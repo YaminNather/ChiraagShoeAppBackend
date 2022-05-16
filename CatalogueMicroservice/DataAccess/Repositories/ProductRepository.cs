@@ -24,7 +24,8 @@ public class ProductRepository : IProductRepository
             Description = options.Description,
             InitialPrice = options.InitialPrice,
             MainImage = options.MainImage,
-            Images = options.Images            
+            Images = options.Images,
+            IsAvailable = true
         };
 
         ModeledResponse<ProductDataModel> insertResponse = await client.From<ProductDataModel>().Insert(productDataModel);
